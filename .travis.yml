@@ -1,0 +1,19 @@
+language: go
+env:
+  global:
+    - GO111MODULE=on
+    - secure: x5sOP6latIVui3U6+2s82eiHYTfQokYwtygmqFjWNAWhWmiHh+ylArylYN9IMRb15PqlsNtBJVUYb6Q1+ZkC6/3d7IXyITh7RpQ55hi4QISF6ve1/X0mOTrO2FO97WDsc4dHGq8WxGTNyBlgqPqmBAYH2tKmn7ZdYAqJwbiWGJDX/Q03DssqePvn9W5TrbTBFU6RXLFpX/6dk7UaxCM5O+qUji1MJJ2nNBmHHAXZmTdnRtSYt275MzXjrnd4nsEkLYVMQs58HeLIpemzC0vJ/73OQK7zo9U5tdti8+J9+/sH14tSrwjTv8BCwy3YWKnEmqx/alf4nS/O9BxBnYDFUIxCpZqqzoskMiZFy59EjWE3lI9LIjo35I6GDvxQsSgvhQR1ZwuBmaoAYDqiyqDJ7fIz9OItN7QuHuc36RgNE9xbbCPGjrtYpTAZJoWm5qT8qAI+vxJl8U1T6Eabe/ADGktYxDNZx4KT/8tG42srjpHpcRmLOMNAGiVQxXZWJB5oHTqAgh4yxUjoT+bGOsg+hM1+dqfI72bxZ/rj5FssYTENJr7CxOYy9LFd8Z8bKJ8HlKeL+KbzQBq/2Gra/jFmFLGgVtsaoq1NN/p7N2/OaclfJNSJh27NhM4EMK2AiD8imoiLOWpzksUbGfXE9Tx69A9LDsQPOrSApcZK1loq6rs=
+
+go:
+  - 1.13.x
+before_install:
+  - make install_tools
+install:
+  - make get-deps
+script:
+  - make build
+  - make test
+  - make coveralls
+after_success:
+  - gox -ldflags "-X github.com/derphilipp/gomar/version.GitCommit=${GIT_COMMIT}${GIT_DIRTY} -X github.com/derphilipp/gomar/version.BuildDate=${BUILD_DATE}" -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
+  - ghr --username tcnksm-sample --token $GITHUB_TOKEN --replace --prerelease --debug pre-release dist/
