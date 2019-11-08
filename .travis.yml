@@ -1,0 +1,21 @@
+language: go
+env:
+  global:
+    - secure: x5sOP6latIVui3U6+2s82eiHYTfQokYwtygmqFjWNAWhWmiHh+ylArylYN9IMRb15PqlsNtBJVUYb6Q1+ZkC6/3d7IXyITh7RpQ55hi4QISF6ve1/X0mOTrO2FO97WDsc4dHGq8WxGTNyBlgqPqmBAYH2tKmn7ZdYAqJwbiWGJDX/Q03DssqePvn9W5TrbTBFU6RXLFpX/6dk7UaxCM5O+qUji1MJJ2nNBmHHAXZmTdnRtSYt275MzXjrnd4nsEkLYVMQs58HeLIpemzC0vJ/73OQK7zo9U5tdti8+J9+/sH14tSrwjTv8BCwy3YWKnEmqx/alf4nS/O9BxBnYDFUIxCpZqqzoskMiZFy59EjWE3lI9LIjo35I6GDvxQsSgvhQR1ZwuBmaoAYDqiyqDJ7fIz9OItN7QuHuc36RgNE9xbbCPGjrtYpTAZJoWm5qT8qAI+vxJl8U1T6Eabe/ADGktYxDNZx4KT/8tG42srjpHpcRmLOMNAGiVQxXZWJB5oHTqAgh4yxUjoT+bGOsg+hM1+dqfI72bxZ/rj5FssYTENJr7CxOYy9LFd8Z8bKJ8HlKeL+KbzQBq/2Gra/jFmFLGgVtsaoq1NN/p7N2/OaclfJNSJh27NhM4EMK2AiD8imoiLOWpzksUbGfXE9Tx69A9LDsQPOrSApcZK1loq6rs=
+    - secure: lSwfdH/kspPZvtYhSmfazZi4ujDjPW8xeH8s7YxQ71UEFEuvfoS4648MgDODJIhk8YDovSD70NfmUMpawQZ61O1lTkhSshBPJdYFj5kD81Qz80L2qSv+Xnh+/ToW0R6QBLaEq3mJzTO3ATKkRNTVv3qVTyyD8yWC3KwddEzXubrsGZQJ/IjTW/P/YfSVozSNLF/XD6lajcq8QGkup+8iIyXn5K1nQj6x+9xe5IP1UCyKCdmjyFGr/Pw9JASc+2uW5OwL4ozxYS+Bw+tNvxqrVvmlFYZiYnCITygN8pXGn8MYGQuYPeClYs7o1/rs0JhCvbSKpx7UmwxOI3vJx4pKQygEaeKvQ0MyVpgQlaRd1wUSgQvKlZb7GJit6y16B1Ma313Z4+pKdWIBldKTd4TPzoCtjn+GilY0Q76ILuM+xCwAUhEYJFi3trbElbscMERjHdHGeyIRM2Okr+NiY8ABQVbF86UgcWDSyd0k8Fr62egl2F9mq/+O2byhKT1zizW/WzsoZ0tOwR1pynM2Ckgx8X74NNs8BE34HvnX5+7oLpoPWFtc5ZYhVC4bSwkci602YRpo0yUvl8rR0yYXLOZirMDklpj/OPsO0vN2fxH4ffiSC3wOJeESZsXOiQ9u9+g8TIw2gbfq4NWXrrYJ0LMptFBBxhp8a8iPIGOyZFU0bjI=
+    - GO111MODULE=on
+
+go:
+  - 1.13.x
+before_install:
+  - make install_tools
+install:
+  - make get-deps
+script:
+  - make build
+  - make test
+  - make coveralls
+  - gox -ldflags "-X github.com/derphilipp/gomar/version.GitCommit=${GIT_COMMIT}${GIT_DIRTY} -X github.com/derphilipp/gomar/version.BuildDate=${BUILD_DATE}" -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
+after_success:
+  - if [ -n "$TRAVIS_TAG" ]; then ghr -replace $TRAVIS_TAG dist/; fi
+  - if [ "$TRAVIS_BRANCH" = "master"  ]; then ghr -prerelease -replace pre-release dist/; fi
