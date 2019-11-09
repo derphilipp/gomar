@@ -22,7 +22,7 @@ after_success:
 
 deploy:
   - ghr -prerelease -replace -replace $TRAVIS_TAG pre-release dist/
-  on:
-    tags: true
-    all_branches: true
+    on:
+      tags: true
+      all_branches: true
 
