@@ -19,9 +19,8 @@ after_success:
   - gox -ldflags "-X github.com/derphilipp/gomar/version.GitCommit=${GIT_COMMIT}${GIT_DIRTY} -X github.com/derphilipp/gomar/version.BuildDate=${BUILD_DATE}" -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
   - ghr --username tcnksm-sample --token $GITHUB_TOKEN --replace --prerelease --debug pre-release dist/
 
-# deploy:
-#   provider: releases
-#   token: PFA5GgSje/Vc/0hifjdBt07X3MNyA3gCuqImhOF5L/yQPU3x0ZbGlw+Gj/v6XZMKBuhxVDMtTkTQkAta4SA6yopl636RgqhlF8kxCZ+KiE+yvljeSONrI8NUWtk48wvzjJIxctqBFjDURAzALWhAKu4qxpZjXhYvRUbWq3cDh2C5bsP+O1ZNE8OvVx4besvk/ykls2U1i97f4n5zTkmI24dupFtnE4gfx241TbDmMN7zCG18BCekGJoC+weYnh3iYDEzyTDhGvNyiRyW4qQVQCp2c2hLn+zvKooMIZ+l5xUe8WoiAD3XNgsf1o2MK1Mq+erySSYXo4Uz+jt9gB5cvnd11DqXxGhfgiQg1MR0bz7tI6Jy2xdC+lyut8koExUKS6sPP5za+MRxwgVtYjNd6ZJHuy+RthVED9r3F8hFCLwlRCBwsSYpyhRHDnOKCHA0eEQ/N/q21IlhgkzudCRLPXZxoNGXhbgfR3TBGGJ+6yBDzcHW/UAJDbWR3+eLKNHo2UWjYSjX2ksj77ngPAYeL5CeV8WeqH7Y+Y2tsPYTiWtsrDL6GCQaSbEPGki1T8sk6k+/QkiEGt4yjDeK2+uxBFUwnHACDPcvRnPls/E5XfXVxWCWuNNt2AD8wFpmcFthaYr1LqcI5o59nibP2Cxm6Dc6FyruKcmY48nx5coxeck=
-#   file_glob: dist/*
-#   on:
-#     tags: true
+deploy:
+  provider: releases
+  file_glob: dist/*
+  # on:
+  #   tags: true
