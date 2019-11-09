@@ -17,10 +17,11 @@ script:
   - make coveralls
 after_success:
   - gox -ldflags "-X github.com/derphilipp/gomar/version.GitCommit=${GIT_COMMIT}${GIT_DIRTY} -X github.com/derphilipp/gomar/version.BuildDate=${BUILD_DATE}" -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
-  - ghr --username tcnksm-sample --token $GITHUB_TOKEN --replace --prerelease --debug pre-release dist/
+  - ghr --username derphilipp --token $GITHUB_TOKEN --repo gomar --replace --prerelease --debug pre-release dist/
 
 deploy:
-  provider: releases
-  file_glob: dist/*
-  # on:
-  #   tags: true
+  - ghr --username derphilipp --token $GITHUB_TOKEN --repo gomar --replace --prerelease --debug $TRAVIS_TAG dist/
+  on:
+    tags: true
+    all_branches: true
+
